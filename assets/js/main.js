@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ARTIST_NAME.innerHTML = error.message.includes("HTTP error") ? error.message : "Check console for details.";
       }
     });
-
+  
   resizeVisualizerCanvas(); // Call on initial load
   // loadSavedTheme(); // Called at the end of the script instead
 });
@@ -254,13 +254,13 @@ function drawVisualizer() {
             clearBgColor = getComputedStyle(document.body).getPropertyValue('--background_2').trim();
          } catch (e) { /* ignore, use fallback */ }
     }
-    canvasCtx.fillStyle = clearBgColor;
+    canvasCtx.fillStyle = clearBgColor; 
     canvasCtx.fillRect(0, 0, VISUALIZER_CANVAS.width, VISUALIZER_CANVAS.height);
     requestAnimationFrame(drawVisualizer);
     return;
   }
 
-  requestAnimationFrame(drawVisualizer);
+  requestAnimationFrame(drawVisualizer); 
 
   analyserNode.getByteFrequencyData(dataArray);
 
@@ -270,12 +270,12 @@ function drawVisualizer() {
   const barPrimaryColor = bodyStyles.getPropertyValue('--canvas_visualizer_bar_primary').trim() || '#00ff00';
   const barSecondaryColor = bodyStyles.getPropertyValue('--canvas_visualizer_bar_secondary').trim() || '#ff00ff';
   const barPeakColor = bodyStyles.getPropertyValue('--canvas_visualizer_bar_peak').trim() || '#ffffff';
-  const shadowColor = barPrimaryColor;
+  const shadowColor = barPrimaryColor; 
   const centralLineColor = bodyStyles.getPropertyValue('--text_1').trim() || 'rgba(255,255,255,0.2)';
 
   canvasCtx.fillStyle = trailColor;
   canvasCtx.fillRect(0, 0, VISUALIZER_CANVAS.width, VISUALIZER_CANVAS.height);
-
+  
   const spacing = 1;
   const totalSpacing = (bufferLength - 1) * spacing;
   const barWidth = Math.max(1, (VISUALIZER_CANVAS.width - totalSpacing) / bufferLength);
@@ -295,7 +295,7 @@ function drawVisualizer() {
     gradient.addColorStop(0.7, barSecondaryColor);
     gradient.addColorStop(1, barHeight > 200 ? barPeakColor : barSecondaryColor);
     canvasCtx.fillStyle = gradient;
-
+    
     let scaledHeight = (barHeight / 255) * VISUALIZER_CANVAS.height * 0.7;
 
     canvasCtx.shadowBlur = 5;
@@ -305,7 +305,7 @@ function drawVisualizer() {
         x, (VISUALIZER_CANVAS.height / 2) - (scaledHeight / 2),
         barWidth, scaledHeight
     );
-
+    
     canvasCtx.shadowBlur = 0;
     x += barWidth + spacing;
   }
