@@ -95,13 +95,13 @@ body.theme-pastel {
 
 /* Remove old :root variables that are now per-theme */
 /* :root {
-  --background_1: #1a1a1a;
-  --background_2: #0d0d0d;
-  --primary_accent: #00ff00;
-  --secondary_accent: #ff00ff;
-  --text_1: #cccccc;
-  --text_2: #00ff00;
-  --border_color: #00ff00;
+  --background_1: #1a1a1a; 
+  --background_2: #0d0d0d; 
+  --primary_accent: #00ff00; 
+  --secondary_accent: #ff00ff; 
+  --text_1: #cccccc; 
+  --text_2: #00ff00; 
+  --border_color: #00ff00; 
   --slider_thumb_color: #00ff00;
   --slider_track_color: #333333;
 } */
@@ -110,9 +110,9 @@ body {
   font-family: 'Audiowide', sans-serif;
   background-color: var(--background_2); /* Changed from #000000 to use theme variable */
   color: var(--text_1);
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+  margin: 0; 
+  padding: 0; 
+  overflow: hidden; 
 }
 
 #mainHeader {
@@ -120,24 +120,24 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 70px;
-  background-color: var(--background_1);
-  color: var(--text_2);
+  height: 70px; 
+  background-color: var(--background_1); 
+  color: var(--text_2); 
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Audiowide', sans-serif;
+  font-family: 'Audiowide', sans-serif; 
   border-bottom: 3px solid var(--border_color);
   box-shadow: 0 5px 15px var(--border_color, rgba(0, 255, 0, 0.2)); /* Use border_color for glow */
-  z-index: 1001;
-  padding: 0 20px;
-  box-sizing: border-box;
+  z-index: 1001; 
+  padding: 0 20px; 
+  box-sizing: border-box; 
 }
 
 #mainHeader h1 {
   margin: 0;
-  font-size: 2rem;
-  text-shadow: 0 0 10px var(--header_text_shadow_1), 0 0 20px var(--header_text_shadow_2);
+  font-size: 2rem; 
+  text-shadow: 0 0 10px var(--header_text_shadow_1), 0 0 20px var(--header_text_shadow_2); 
 }
 
 #themeSwitcherBtn {
@@ -146,10 +146,10 @@ body {
   border: 1px solid var(--theme_switcher_btn_border);
   border-radius: 5px;
   padding: 5px 10px;
-  font-size: 1.2rem;
-  line-height: 1;
+  font-size: 1.2rem; 
+  line-height: 1; 
   cursor: pointer;
-  margin-left: 15px;
+  margin-left: 15px; 
   transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
@@ -166,52 +166,52 @@ body {
 
 #musicVisualizerCanvas {
   position: fixed;
-  top: 70px;
+  top: 70px; 
   left: 0;
   width: 100%;
-  height: calc(100vh - 70px - 85px);
+  height: calc(100vh - 70px - 85px); 
   background-color: var(--background_2); /* Changed from #000000 to use theme variable */
-  z-index: 1;
+  z-index: 1; 
   border: none;
   border-radius: 0;
   margin: 0;
 }
 
 .musicPlayer {
-  position: fixed;
+  position: fixed; 
   bottom: 0;
-  left: 0;
+  left: 0; 
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 25px;
-  background-color: var(--background_1);
-  border-top: 3px solid var(--border_color);
+  padding: 15px 25px; 
+  background-color: var(--background_1); 
+  border-top: 3px solid var(--border_color); 
   box-shadow: 0 -5px 15px var(--border_color, rgba(0, 255, 0, 0.2));  /* Use border_color for glow */
-  z-index: 1000;
+  z-index: 1000; 
 }
 
 .musicPlayer .infos {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 15px; 
 }
 
-.musicPlayer img#songPicture {
-  height: 60px;
-  width: 60px;
-  object-fit: cover;
+.musicPlayer img#songPicture { 
+  height: 60px; 
+  width: 60px; 
+  object-fit: cover; 
   border-radius: 5px;
   border: 2px solid var(--primary_accent);
   box-shadow: 0 0 10px var(--primary_accent);
 }
 
 .musicPlayer .songInfos #song_title {
-  color: var(--text_2);
+  color: var(--text_2); 
   font-size: 1rem;
   font-weight: bold;
-  text-shadow: 0 0 5px var(--text_2);
+  text-shadow: 0 0 5px var(--text_2); 
 }
 .musicPlayer .songInfos #artist_name {
   color: var(--text_1);
@@ -220,7 +220,7 @@ body {
 
 #pause-btn,
 #volume_off {
-  display: none;
+  display: none; 
 }
 
 #skipB-btn,
@@ -231,7 +231,7 @@ body {
 #volume_off {
   cursor: pointer;
   color: var(--button_text_color); /* Updated to use theme variable */
-  font-size: 38px;
+  font-size: 38px; 
   transition: color 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
 }
 #skipB-btn:hover,
@@ -244,20 +244,20 @@ body {
   text-shadow: 0 0 10px var(--button_hover_shadow_color); /* Updated to use theme variable */
 }
 #play-btn, #pause-btn {
-    font-size: 48px;
+    font-size: 48px; 
 }
 
 .controlSection {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 10px; 
 }
 
 .duration {
   color: var(--text_1);
   display: flex;
-  align-items: center;
+  align-items: center; 
   gap: 8px;
 }
 
@@ -269,7 +269,7 @@ input[type=range] {
   border-radius: 4px;
   cursor: pointer;
   outline: none;
-  margin: 0 5px;
+  margin: 0 5px; 
 }
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
@@ -278,7 +278,7 @@ input[type=range]::-webkit-slider-thumb {
   height: 18px;
   background: var(--slider_thumb_color);
   border-radius: 50%;
-  border: 2px solid var(--background_1);
+  border: 2px solid var(--background_1); 
   box-shadow: 0 0 5px var(--slider_thumb_color);
 }
 input[type=range]::-moz-range-thumb {
@@ -292,7 +292,7 @@ input[type=range]::-moz-range-thumb {
 }
 
 #track {
-     width: 350px;
+     width: 350px; 
 }
 #volume {
     width: 100px;
@@ -311,39 +311,39 @@ input[type=range]::-moz-range-thumb {
     font-size: 1.8rem;
   }
   #mainHeader {
-    height: 60px;
+    height: 60px; 
   }
   #musicVisualizerCanvas {
-    top: 60px;
-    height: calc(100vh - 60px - 80px);
+    top: 60px; 
+    height: calc(100vh - 60px - 80px); 
   }
 
   .musicPlayer {
-    padding: 10px 15px;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
+    padding: 10px 15px; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 10px; 
   }
 
   .infos {
     width: 100%;
-    justify-content: center;
+    justify-content: center; 
     margin-bottom: 10px;
   }
-
+  
   .controlSection {
     width: 100%;
-    gap: 8px;
+    gap: 8px; 
   }
 
   .duration input[type="range"], #track {
-    width: 100%;
-    max-width: 400px;
+    width: 100%; 
+    max-width: 400px; 
   }
-
+  
   .duration {
-    width: 90%;
-    max-width: 400px;
+    width: 90%; 
+    max-width: 400px; 
     justify-content: center;
   }
 
@@ -355,23 +355,23 @@ input[type=range]::-moz-range-thumb {
   }
 
   #play-btn, #pause-btn {
-    font-size: 42px;
+    font-size: 42px; 
   }
   #skipB-btn, #skipF-btn, #volume_icon, #volume_off {
-    font-size: 32px;
+    font-size: 32px; 
   }
 
   .volume {
-    margin-top: 10px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    margin-top: 10px; 
+    width: 100%; 
+    display: flex; 
+    justify-content: center; 
   }
   .volume_input {
-     justify-content: center;
+     justify-content: center; 
   }
   #volume {
-    width: 120px;
+    width: 120px; 
   }
 }
 
@@ -380,60 +380,60 @@ input[type=range]::-moz-range-thumb {
     font-size: 1.4rem;
   }
   #mainHeader {
-    height: 50px;
+    height: 50px; 
     padding: 0 10px;
   }
   #musicVisualizerCanvas {
-    top: 50px;
-    height: calc(100vh - 50px - 75px);
+    top: 50px; 
+    height: calc(100vh - 50px - 75px); 
   }
 
   .musicPlayer {
-    padding: 10px;
+    padding: 10px; 
     gap: 8px;
   }
 
   .infos {
-    flex-direction: column;
+    flex-direction: column; 
     align-items: center;
     text-align: center;
     gap: 5px;
-    margin-bottom: 5px;
+    margin-bottom: 5px; 
   }
-
+  
   .musicPlayer img#songPicture {
-    height: 50px;
-    width: 50px;
+    height: 50px; 
+    width: 50px; 
     margin-bottom: 5px;
   }
 
   .controlSection .controls {
-    gap: 15px;
+    gap: 15px; 
   }
-
+  
   #play-btn, #pause-btn {
-    font-size: 40px;
+    font-size: 40px; 
   }
   #skipB-btn, #skipF-btn {
-    font-size: 30px;
+    font-size: 30px; 
   }
    #volume_icon, #volume_off {
     font-size: 30px;
   }
 
   .duration {
-    font-size: 0.8rem;
-    width: 100%;
-    gap: 5px;
+    font-size: 0.8rem; 
+    width: 100%; 
+    gap: 5px; 
   }
   .duration input[type="range"], #track {
-    width: 100%;
+    width: 100%; 
   }
-
+  
   .volume {
-    margin-top: 5px;
+    margin-top: 5px; 
   }
   #volume {
-    width: 100px;
+    width: 100px; 
   }
 }
