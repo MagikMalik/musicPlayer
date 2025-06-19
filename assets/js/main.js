@@ -11,6 +11,12 @@ const ARTIST_NAME = document.getElementById("artist_name");
 const SONG_PICTURE = document.getElementById("songPicture");
 const VOLUME = document.getElementById("volume");
 const VISUALIZER_CANVAS = document.getElementById("musicVisualizerCanvas");
+const THEME_SWITCHER_BTN = document.getElementById('themeSwitcherBtn');
+
+/* Theme variables */
+const THEMES = ['theme-neon', 'theme-cyberpunk', 'theme-pastel'];
+let currentThemeIndex = 0;
+const THEME_STORAGE_KEY = 'evanMusicStationTheme';
 
 /* Visualizer variables */
 let audioContext, analyserNode, sourceNode, dataArray, bufferLength;
@@ -172,9 +178,41 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   resizeVisualizerCanvas(); // Call on initial load
+  // loadSavedTheme(); // Called at the end of the script instead
 });
 
 window.addEventListener('resize', resizeVisualizerCanvas); // Add resize listener
+
+// Theme Functions
+function applyTheme(themeName) {
+  THEMES.forEach(t => { // Ensure all known theme classes are removed
+    if (document.body.classList.contains(t)) {
+      document.body.classList.remove(t);
+    }
+  });
+  document.body.classList.add(themeName); // Add the new theme class
+  localStorage.setItem(THEME_STORAGE_KEY, themeName);
+  currentThemeIndex = THEMES.indexOf(themeName);
+}
+
+if (THEME_SWITCHER_BTN) {
+  THEME_SWITCHER_BTN.addEventListener('click', () => {
+    currentThemeIndex = (currentThemeIndex + 1) % THEMES.length;
+    applyTheme(THEMES[currentThemeIndex]);
+  });
+} else {
+  // console.log("Theme switcher button not found"); // Optional: for debugging
+}
+
+function loadSavedTheme() {
+  const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+  if (savedTheme && THEMES.includes(savedTheme)) {
+    applyTheme(savedTheme);
+  } else {
+    applyTheme(THEMES[0]); // Apply default theme (theme-neon)
+  }
+}
+// End Theme Functions
 
 function resizeVisualizerCanvas() {
   if (VISUALIZER_CANVAS) {
@@ -198,96 +236,91 @@ function setupVisualizer() {
 }
 
 function drawVisualizer() {
-  if (!VISUALIZER_CANVAS || !analyserNode || !audioContext || audioContext.state === 'suspended') {
-    // If canvas is not there, or audio context not ready/suspended, request frame and exit.
-    // This helps to start/resume visualization if it was stopped or not ready.
-    if (VISUALIZER_CANVAS && VISUALIZER_CANVAS.getContext('2d')) {
-        const canvasCtx = VISUALIZER_CANVAS.getContext('2d');
-        canvasCtx.fillStyle = 'rgb(0, 0, 0)'; // Clear to black
-        canvasCtx.fillRect(0, 0, VISUALIZER_CANVAS.width, VISUALIZER_CANVAS.height);
+  // Ensure VISUALIZER_CANVAS is valid and get context once per call if possible
+  if (!VISUALIZER_CANVAS) {
+      requestAnimationFrame(drawVisualizer); // Keep trying if canvas not ready
+      return;
+  }
+  const canvasCtx = VISUALIZER_CANVAS.getContext('2d');
+  if (!canvasCtx) { // Should not happen if VISUALIZER_CANVAS is valid
+      requestAnimationFrame(drawVisualizer);
+      return;
+  }
+
+  if (!analyserNode || !audioContext || audioContext.state === 'suspended') {
+    let clearBgColor = '#000000'; // Default fallback if no theme applied yet or CSS var missing
+    if (document.body.className.includes('theme-')) { // Check if any theme class is present
+         try {
+            clearBgColor = getComputedStyle(document.body).getPropertyValue('--background_2').trim();
+         } catch (e) { /* ignore, use fallback */ }
     }
+    canvasCtx.fillStyle = clearBgColor;
+    canvasCtx.fillRect(0, 0, VISUALIZER_CANVAS.width, VISUALIZER_CANVAS.height);
     requestAnimationFrame(drawVisualizer);
     return;
   }
 
-  const canvasCtx = VISUALIZER_CANVAS.getContext('2d');
   requestAnimationFrame(drawVisualizer);
 
-  analyserNode.getByteFrequencyData(dataArray); // Get frequency data
+  analyserNode.getByteFrequencyData(dataArray);
 
-  canvasCtx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Slightly transparent black for a fading trail effect
+  const bodyStyles = getComputedStyle(document.body);
+  // Provide fallbacks for all color properties in case CSS variables are missing temporarily
+  const trailColor = bodyStyles.getPropertyValue('--canvas_trail_color').trim() || 'rgba(0,0,0,0.1)'; // Assuming --canvas_trail_color will be added to CSS themes
+  const barPrimaryColor = bodyStyles.getPropertyValue('--canvas_visualizer_bar_primary').trim() || '#00ff00';
+  const barSecondaryColor = bodyStyles.getPropertyValue('--canvas_visualizer_bar_secondary').trim() || '#ff00ff';
+  const barPeakColor = bodyStyles.getPropertyValue('--canvas_visualizer_bar_peak').trim() || '#ffffff';
+  const shadowColor = barPrimaryColor;
+  const centralLineColor = bodyStyles.getPropertyValue('--text_1').trim() || 'rgba(255,255,255,0.2)';
+
+  canvasCtx.fillStyle = trailColor;
   canvasCtx.fillRect(0, 0, VISUALIZER_CANVAS.width, VISUALIZER_CANVAS.height);
 
-  // const barWidth = (VISUALIZER_CANVAS.width / bufferLength) * 1.5; // OLD
-  const spacing = 1; // Define spacing between bars
+  const spacing = 1;
   const totalSpacing = (bufferLength - 1) * spacing;
-  const barWidth = Math.max(1, (VISUALIZER_CANVAS.width - totalSpacing) / bufferLength); // Ensure barWidth is at least 1
-
+  const barWidth = Math.max(1, (VISUALIZER_CANVAS.width - totalSpacing) / bufferLength);
   let barHeight;
   let x = 0;
 
-  // Colors from CSS variables (or hardcoded if direct access is complex)
-  // For subtask simplicity, let's hardcode gamer-style colors.
-  const primaryColor = '#00ff00'; // Neon Green
-  const secondaryColor = '#ff00ff'; // Neon Pink (for highlights or gradients)
-  const peakColor = '#ffffff'; // White for peaks
-
   for (let i = 0; i < bufferLength; i++) {
-    barHeight = dataArray[i]; // dataArray values are 0-255
+    barHeight = dataArray[i];
+    // Gradient extent calculation needs to be robust
+    let gradientMaxY = VISUALIZER_CANVAS.height - ((barHeight / 255) * VISUALIZER_CANVAS.height * 0.7);
+    if (gradientMaxY < 0) gradientMaxY = 0; // Ensure it doesn't go negative
 
-    // Create a gradient for each bar for a more dynamic look
     const gradient = canvasCtx.createLinearGradient(
-        x, VISUALIZER_CANVAS.height, x, VISUALIZER_CANVAS.height - barHeight * (VISUALIZER_CANVAS.height / 255)
+        x, VISUALIZER_CANVAS.height, x, gradientMaxY
     );
-    gradient.addColorStop(0, primaryColor); // Start color (bottom)
-    gradient.addColorStop(0.7, secondaryColor); // Middle color
-    gradient.addColorStop(1, barHeight > 200 ? peakColor : secondaryColor); // End color (top), use peakColor for high bars
-
+    gradient.addColorStop(0, barPrimaryColor);
+    gradient.addColorStop(0.7, barSecondaryColor);
+    gradient.addColorStop(1, barHeight > 200 ? barPeakColor : barSecondaryColor);
     canvasCtx.fillStyle = gradient;
 
-    // Scale barHeight to fit canvas height better
-    // Let's say canvas height is 60px (as styled). Max dataArray[i] is 255.
-    // So, scaledHeight = (barHeight / 255) * canvasHeight
-    // let scaledHeight = (barHeight / 255) * VISUALIZER_CANVAS.height * 0.9; // Use 90% of canvas height // OLD
-    let scaledHeight = (barHeight / 255) * VISUALIZER_CANVAS.height * 0.7; // Increased multiplier slightly to 0.7 for taller bars on average
+    let scaledHeight = (barHeight / 255) * VISUALIZER_CANVAS.height * 0.7;
 
-
-    // Draw bars from the bottom
-    // canvasCtx.fillRect(x, VISUALIZER_CANVAS.height - scaledHeight, barWidth, scaledHeight);
-
-    // --- Alternative: Bars growing from center outwards (symmetric) ---
-    // This requires drawing two bars for each data point, one upwards, one downwards,
-    // or a single bar centered vertically. Let's do centered bars.
-
-    // scaledHeight = (barHeight / 255) * VISUALIZER_CANVAS.height * 0.6; // Max 60% of canvas height for centered bars // OLD
-    // No, this was a misunderstanding. The 0.7 multiplier above is the one to use for centered bars too.
-    // The previous 0.9 was for bars from bottom. The 0.6 was an intermediate thought.
-    // The current 0.7 for scaledHeight applies to the centered approach.
-
-    // Glow effect for bars (subtle)
     canvasCtx.shadowBlur = 5;
-    canvasCtx.shadowColor = primaryColor;
+    canvasCtx.shadowColor = shadowColor;
 
-    // Draw the bar centered vertically
     canvasCtx.fillRect(
-        x,
-        (VISUALIZER_CANVAS.height / 2) - (scaledHeight / 2),
-        barWidth,
-        scaledHeight
+        x, (VISUALIZER_CANVAS.height / 2) - (scaledHeight / 2),
+        barWidth, scaledHeight
     );
 
-    // Reset shadow for next drawings if not desired globally
     canvasCtx.shadowBlur = 0;
-
-
-    x += barWidth + spacing; // Use defined spacing
+    x += barWidth + spacing;
   }
 
-  // Optional: Add a central horizontal line for symmetry reference
   canvasCtx.beginPath();
   canvasCtx.moveTo(0, VISUALIZER_CANVAS.height / 2);
   canvasCtx.lineTo(VISUALIZER_CANVAS.width, VISUALIZER_CANVAS.height / 2);
-  canvasCtx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; // Faint white line
+  canvasCtx.strokeStyle = centralLineColor;
   canvasCtx.lineWidth = 1;
   canvasCtx.stroke();
+}
+
+// Make sure this is called after the DOM is ready
+if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', loadSavedTheme);
+} else {
+    loadSavedTheme(); // DOM is already ready
 }

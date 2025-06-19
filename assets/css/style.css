@@ -4,25 +4,115 @@
   box-sizing: border-box;
 }
 
-:root {
-  --background_1: #1a1a1a; /* Darker grey */
-  --background_2: #0d0d0d; /* Even darker for accents or panel backgrounds */
-  --primary_accent: #00ff00; /* Neon Green */
-  --secondary_accent: #ff00ff; /* Neon Pink/Magenta for contrast */
-  --text_1: #cccccc; /* Light grey for primary text */
-  --text_2: #00ff00; /* Neon Green for important text/icons */
+/* Theme variable definitions */
+/* Theme 1: Neon (Default or body.theme-neon) */
+body.theme-neon {
+  --background_1: #1a1a1a;
+  --background_2: #0d0d0d;
+  --primary_accent: #00ff00;
+  --secondary_accent: #ff00ff;
+  --text_1: #cccccc;
+  --text_2: #00ff00;
   --border_color: #00ff00;
   --slider_thumb_color: #00ff00;
   --slider_track_color: #333333;
+  --canvas_visualizer_bar_primary: #00ff00;
+  --canvas_visualizer_bar_secondary: #ff00ff;
+  --canvas_visualizer_bar_peak: #ffffff;
+  --header_text_shadow_1: var(--text_2);
+  --header_text_shadow_2: var(--text_2);
+  --button_text_color: var(--text_1); /* For generic buttons, if added */
+  --button_hover_text_color: var(--text_2);
+  --button_hover_shadow_color: var(--text_2);
+  --theme_switcher_btn_bg: var(--background_1);
+  --theme_switcher_btn_border: var(--primary_accent);
+  --theme_switcher_btn_text: var(--primary_accent);
+  --theme_switcher_btn_hover_bg: var(--primary_accent);
+  --theme_switcher_btn_hover_text: var(--background_1);
+  --theme_switcher_btn_hover_border: var(--primary_accent);
+  --theme_switcher_btn_hover_shadow: var(--primary_accent);
+  --canvas_trail_color: rgba(0, 0, 0, 0.1); /* Default subtle black trail */
 }
+
+/* Theme 2: Cyberpunk Blue/Red (body.theme-cyberpunk) */
+body.theme-cyberpunk {
+  --background_1: #0f0f28; /* Dark Indigo */
+  --background_2: #050510; /* Very Dark Blue */
+  --primary_accent: #00ffff; /* Cyan/Electric Blue */
+  --secondary_accent: #ff0033; /* Bright Red */
+  --text_1: #e0e0e0;
+  --text_2: #00ffff; /* Cyan for highlights */
+  --border_color: #00ffff;
+  --slider_thumb_color: #00ffff;
+  --slider_track_color: #2a2a4a; /* Darker Indigo */
+  --canvas_visualizer_bar_primary: #00ffff;
+  --canvas_visualizer_bar_secondary: #ff0033;
+  --canvas_visualizer_bar_peak: #ffffff;
+  --header_text_shadow_1: var(--text_2);
+  --header_text_shadow_2: var(--text_2);
+  --button_text_color: var(--text_1);
+  --button_hover_text_color: var(--text_2);
+  --button_hover_shadow_color: var(--text_2);
+  --theme_switcher_btn_bg: var(--background_1);
+  --theme_switcher_btn_border: var(--primary_accent);
+  --theme_switcher_btn_text: var(--primary_accent);
+  --theme_switcher_btn_hover_bg: var(--primary_accent);
+  --theme_switcher_btn_hover_text: var(--background_1);
+  --theme_switcher_btn_hover_border: var(--primary_accent);
+  --theme_switcher_btn_hover_shadow: var(--primary_accent);
+  --canvas_trail_color: rgba(5, 5, 16, 0.15); /* Very dark blue, slightly more opaque trail */
+}
+
+/* Theme 3: Pastel Gamer (body.theme-pastel) */
+body.theme-pastel {
+  --background_1: #2e1a2e; /* Dark Plum */
+  --background_2: #1a0d1a; /* Very Dark Purple */
+  --primary_accent: #f0a0f0; /* Pastel Pink */
+  --secondary_accent: #a0f0f0; /* Pastel Cyan/Mint */
+  --text_1: #f5f5f5;
+  --text_2: #f0a0f0; /* Pastel Pink for highlights */
+  --border_color: #f0a0f0;
+  --slider_thumb_color: #f0a0f0;
+  --slider_track_color: #4d2a4d; /* Mid Plum */
+  --canvas_visualizer_bar_primary: #f0a0f0;
+  --canvas_visualizer_bar_secondary: #a0f0f0;
+  --canvas_visualizer_bar_peak: #333333; /* Dark grey for peaks */
+  --header_text_shadow_1: var(--text_2);
+  --header_text_shadow_2: var(--text_2);
+  --button_text_color: var(--text_1);
+  --button_hover_text_color: var(--text_2);
+  --button_hover_shadow_color: var(--text_2);
+  --theme_switcher_btn_bg: var(--background_1);
+  --theme_switcher_btn_border: var(--primary_accent);
+  --theme_switcher_btn_text: var(--primary_accent);
+  --theme_switcher_btn_hover_bg: var(--primary_accent);
+  --theme_switcher_btn_hover_text: var(--background_1);
+  --theme_switcher_btn_hover_border: var(--primary_accent);
+  --theme_switcher_btn_hover_shadow: var(--primary_accent);
+  --canvas_trail_color: rgba(26, 13, 26, 0.1); /* Very dark purple, subtle trail */
+}
+/* End of Theme variable definitions */
+
+/* Remove old :root variables that are now per-theme */
+/* :root {
+  --background_1: #1a1a1a;
+  --background_2: #0d0d0d;
+  --primary_accent: #00ff00;
+  --secondary_accent: #ff00ff;
+  --text_1: #cccccc;
+  --text_2: #00ff00;
+  --border_color: #00ff00;
+  --slider_thumb_color: #00ff00;
+  --slider_track_color: #333333;
+} */
 
 body {
   font-family: 'Audiowide', sans-serif;
-  background-color: #000000; /* Ensure body background is black */
+  background-color: var(--background_2); /* Changed from #000000 to use theme variable */
   color: var(--text_1);
-  margin: 0; /* Remove default margin */
-  padding: 0; /* Remove default padding */
-  overflow: hidden; /* Prevent scrollbars due to full-screen elements */
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 #mainHeader {
@@ -30,34 +120,58 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 70px; /* Define header height */
+  height: 70px;
   background-color: var(--background_1);
-  color: var(--text_2); /* Neon green for title */
+  color: var(--text_2);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Audiowide', sans-serif; /* Ensure font is applied */
+  font-family: 'Audiowide', sans-serif;
   border-bottom: 3px solid var(--border_color);
-  box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2); /* Neon glow effect downwards */
-  z-index: 1001; /* High z-index, above canvas and player bar */
-  padding: 0 20px; /* Horizontal padding */
-  box-sizing: border-box; /* Include padding and border in width/height */
+  box-shadow: 0 5px 15px var(--border_color, rgba(0, 255, 0, 0.2)); /* Use border_color for glow */
+  z-index: 1001;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 #mainHeader h1 {
   margin: 0;
-  font-size: 2rem; /* Adjust size as needed */
-  text-shadow: 0 0 10px var(--text_2), 0 0 20px var(--text_2); /* Stronger glow for title */
+  font-size: 2rem;
+  text-shadow: 0 0 10px var(--header_text_shadow_1), 0 0 20px var(--header_text_shadow_2);
+}
+
+#themeSwitcherBtn {
+  background-color: var(--theme_switcher_btn_bg);
+  color: var(--theme_switcher_btn_text);
+  border: 1px solid var(--theme_switcher_btn_border);
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  margin-left: 15px;
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+#themeSwitcherBtn:hover {
+  color: var(--theme_switcher_btn_hover_text);
+  background-color: var(--theme_switcher_btn_hover_bg);
+  border-color: var(--theme_switcher_btn_hover_border);
+  box-shadow: 0 0 10px var(--theme_switcher_btn_hover_shadow);
+}
+
+#themeSwitcherBtn:active {
+  transform: translateY(1px); /* Simple active state */
 }
 
 #musicVisualizerCanvas {
   position: fixed;
-  top: 70px; /* New: Below the 70px header */
+  top: 70px;
   left: 0;
   width: 100%;
-  height: calc(100vh - 70px - 85px); /* New: Space between header (70px) and player bar (estimated 85px) */
-  background-color: #000000;
-  z-index: 1; /* Behind the player bar and header */
+  height: calc(100vh - 70px - 85px);
+  background-color: var(--background_2); /* Changed from #000000 to use theme variable */
+  z-index: 1;
   border: none;
   border-radius: 0;
   margin: 0;
@@ -74,8 +188,8 @@ body {
   padding: 15px 25px;
   background-color: var(--background_1);
   border-top: 3px solid var(--border_color);
-  box-shadow: 0 -5px 15px rgba(0, 255, 0, 0.2);
-  z-index: 1000; /* Below header, above canvas */
+  box-shadow: 0 -5px 15px var(--border_color, rgba(0, 255, 0, 0.2));  /* Use border_color for glow */
+  z-index: 1000;
 }
 
 .musicPlayer .infos {
@@ -116,7 +230,7 @@ body {
 #volume_icon,
 #volume_off {
   cursor: pointer;
-  color: var(--text_1);
+  color: var(--button_text_color); /* Updated to use theme variable */
   font-size: 38px;
   transition: color 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
 }
@@ -126,8 +240,8 @@ body {
 #skipF-btn:hover,
 #volume_icon:hover,
 #volume_off:hover {
-  color: var(--text_2);
-  text-shadow: 0 0 10px var(--text_2);
+  color: var(--button_hover_text_color); /* Updated to use theme variable */
+  text-shadow: 0 0 10px var(--button_hover_shadow_color); /* Updated to use theme variable */
 }
 #play-btn, #pause-btn {
     font-size: 48px;
@@ -197,11 +311,11 @@ input[type=range]::-moz-range-thumb {
     font-size: 1.8rem;
   }
   #mainHeader {
-    height: 60px; /* Slightly smaller header on tablet */
+    height: 60px;
   }
   #musicVisualizerCanvas {
-    top: 60px; /* Adjust canvas top for smaller header */
-    height: calc(100vh - 60px - 80px); /* Adjust canvas height, assuming player bar is ~80px on tablet */
+    top: 60px;
+    height: calc(100vh - 60px - 80px);
   }
 
   .musicPlayer {
@@ -266,12 +380,12 @@ input[type=range]::-moz-range-thumb {
     font-size: 1.4rem;
   }
   #mainHeader {
-    height: 50px; /* Even smaller header on mobile */
+    height: 50px;
     padding: 0 10px;
   }
   #musicVisualizerCanvas {
-    top: 50px; /* Adjust canvas top for smaller header */
-    height: calc(100vh - 50px - 75px); /* Adjust canvas height, assuming player bar is ~75px on mobile */
+    top: 50px;
+    height: calc(100vh - 50px - 75px);
   }
 
   .musicPlayer {
