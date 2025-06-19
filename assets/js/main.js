@@ -14,7 +14,7 @@ const VISUALIZER_CANVAS = document.getElementById("musicVisualizerCanvas");
 
 /* Visualizer variables */
 let audioContext, analyserNode, sourceNode, dataArray, bufferLength;
-const FFT_SIZE = 256; // Power of 2, e.g., 64, 128, 256, 512, 1024...
+const FFT_SIZE = 1024; // Increased from 256 for more bars (will be 512 bars)
 
 
 /* Boutons de controle du lecteur */
@@ -145,6 +145,9 @@ document.addEventListener("DOMContentLoaded", () => {
   fetch("./assets/playlist.json")
     .then((res) => {
       if (!res.ok) {
+        // Update to provide more specific error messages in UI
+        SONG_TITLE.innerHTML = "Playlist fetch error";
+        ARTIST_NAME.innerHTML = `Status: ${res.status}`;
         throw new Error(`HTTP error! status: ${res.status}`);
       }
       return res.json();
@@ -155,12 +158,30 @@ document.addEventListener("DOMContentLoaded", () => {
         setSongInfos(currentSongIndex); // Load the initial song
       } else {
         console.error("Playlist is empty or invalid.");
+        SONG_TITLE.innerHTML = "Playlist not found or empty";
+        ARTIST_NAME.innerHTML = "";
       }
     })
     .catch((error) => {
-      console.error("Could not fetch playlist:", error);
+      console.error("Error loading playlist:", error);
+      // Ensure error messages are displayed if fetch or processing fails
+      if (SONG_TITLE.innerHTML === "Titre de la chanson") { // Check if title was not already set by a more specific error
+          SONG_TITLE.innerHTML = "Error loading playlist";
+          ARTIST_NAME.innerHTML = error.message.includes("HTTP error") ? error.message : "Check console for details.";
+      }
     });
+
+  resizeVisualizerCanvas(); // Call on initial load
 });
+
+window.addEventListener('resize', resizeVisualizerCanvas); // Add resize listener
+
+function resizeVisualizerCanvas() {
+  if (VISUALIZER_CANVAS) {
+    VISUALIZER_CANVAS.width = VISUALIZER_CANVAS.clientWidth;
+    VISUALIZER_CANVAS.height = VISUALIZER_CANVAS.clientHeight;
+  }
+}
 
 function setupVisualizer() {
   audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -173,6 +194,7 @@ function setupVisualizer() {
   }
   sourceNode.connect(analyserNode);
   analyserNode.connect(audioContext.destination);
+  resizeVisualizerCanvas(); // Call here to set initial size correctly
 }
 
 function drawVisualizer() {
@@ -196,7 +218,11 @@ function drawVisualizer() {
   canvasCtx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Slightly transparent black for a fading trail effect
   canvasCtx.fillRect(0, 0, VISUALIZER_CANVAS.width, VISUALIZER_CANVAS.height);
 
-  const barWidth = (VISUALIZER_CANVAS.width / bufferLength) * 1.5; // Bars are a bit thinner
+  // const barWidth = (VISUALIZER_CANVAS.width / bufferLength) * 1.5; // OLD
+  const spacing = 1; // Define spacing between bars
+  const totalSpacing = (bufferLength - 1) * spacing;
+  const barWidth = Math.max(1, (VISUALIZER_CANVAS.width - totalSpacing) / bufferLength); // Ensure barWidth is at least 1
+
   let barHeight;
   let x = 0;
 
@@ -222,7 +248,9 @@ function drawVisualizer() {
     // Scale barHeight to fit canvas height better
     // Let's say canvas height is 60px (as styled). Max dataArray[i] is 255.
     // So, scaledHeight = (barHeight / 255) * canvasHeight
-    let scaledHeight = (barHeight / 255) * VISUALIZER_CANVAS.height * 0.9; // Use 90% of canvas height
+    // let scaledHeight = (barHeight / 255) * VISUALIZER_CANVAS.height * 0.9; // Use 90% of canvas height // OLD
+    let scaledHeight = (barHeight / 255) * VISUALIZER_CANVAS.height * 0.7; // Increased multiplier slightly to 0.7 for taller bars on average
+
 
     // Draw bars from the bottom
     // canvasCtx.fillRect(x, VISUALIZER_CANVAS.height - scaledHeight, barWidth, scaledHeight);
@@ -231,7 +259,10 @@ function drawVisualizer() {
     // This requires drawing two bars for each data point, one upwards, one downwards,
     // or a single bar centered vertically. Let's do centered bars.
 
-    scaledHeight = (barHeight / 255) * VISUALIZER_CANVAS.height * 0.6; // Max 60% of canvas height for centered bars
+    // scaledHeight = (barHeight / 255) * VISUALIZER_CANVAS.height * 0.6; // Max 60% of canvas height for centered bars // OLD
+    // No, this was a misunderstanding. The 0.7 multiplier above is the one to use for centered bars too.
+    // The previous 0.9 was for bars from bottom. The 0.6 was an intermediate thought.
+    // The current 0.7 for scaledHeight applies to the centered approach.
 
     // Glow effect for bars (subtle)
     canvasCtx.shadowBlur = 5;
@@ -249,7 +280,7 @@ function drawVisualizer() {
     canvasCtx.shadowBlur = 0;
 
 
-    x += barWidth + 2; // Add 2 for spacing
+    x += barWidth + spacing; // Use defined spacing
   }
 
   // Optional: Add a central horizontal line for symmetry reference
