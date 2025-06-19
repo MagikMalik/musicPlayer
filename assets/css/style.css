@@ -23,24 +23,44 @@ body {
   margin: 0; /* Remove default margin */
   padding: 0; /* Remove default padding */
   overflow: hidden; /* Prevent scrollbars due to full-screen elements */
-  /* display: flex;  Removed as it's not needed for this layout and might interfere */
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* min-height: 100vh; */
 }
 
-#musicVisualizerCanvas {
+#mainHeader {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%; /* Let it be full height, player will sit on top */
-  background-color: #000000; /* Black background for the visualizer itself */
-  z-index: 1; /* Behind the player bar */
-  border: none; /* Remove any border */
-  border-radius: 0; /* Remove any border-radius */
-  margin: 0; /* Remove any margin */
-  /* Old box styles are effectively removed by setting new ones */
+  height: 70px; /* Define header height */
+  background-color: var(--background_1);
+  color: var(--text_2); /* Neon green for title */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Audiowide', sans-serif; /* Ensure font is applied */
+  border-bottom: 3px solid var(--border_color);
+  box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2); /* Neon glow effect downwards */
+  z-index: 1001; /* High z-index, above canvas and player bar */
+  padding: 0 20px; /* Horizontal padding */
+  box-sizing: border-box; /* Include padding and border in width/height */
+}
+
+#mainHeader h1 {
+  margin: 0;
+  font-size: 2rem; /* Adjust size as needed */
+  text-shadow: 0 0 10px var(--text_2), 0 0 20px var(--text_2); /* Stronger glow for title */
+}
+
+#musicVisualizerCanvas {
+  position: fixed;
+  top: 70px; /* New: Below the 70px header */
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 70px - 85px); /* New: Space between header (70px) and player bar (estimated 85px) */
+  background-color: #000000;
+  z-index: 1; /* Behind the player bar and header */
+  border: none;
+  border-radius: 0;
+  margin: 0;
 }
 
 .musicPlayer {
@@ -52,10 +72,10 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 15px 25px;
-  background-color: var(--background_1); /* Ensure this is a solid color */
+  background-color: var(--background_1);
   border-top: 3px solid var(--border_color);
   box-shadow: 0 -5px 15px rgba(0, 255, 0, 0.2);
-  z-index: 1000; /* High z-index to be on top of the canvas */
+  z-index: 1000; /* Below header, above canvas */
 }
 
 .musicPlayer .infos {
@@ -173,32 +193,33 @@ input[type=range]::-moz-range-thumb {
 /* Media Queries for Responsiveness */
 
 @media (max-width: 768px) {
+  #mainHeader h1 {
+    font-size: 1.8rem;
+  }
+  #mainHeader {
+    height: 60px; /* Slightly smaller header on tablet */
+  }
+  #musicVisualizerCanvas {
+    top: 60px; /* Adjust canvas top for smaller header */
+    height: calc(100vh - 60px - 80px); /* Adjust canvas height, assuming player bar is ~80px on tablet */
+  }
+
   .musicPlayer {
-    padding: 10px 15px; /* Reduce padding */
-    flex-direction: column; /* Stack sections vertically */
-    align-items: center; /* Center items in column layout */
-    gap: 10px; /* Add some gap between stacked items */
+    padding: 10px 15px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
 
   .infos {
     width: 100%;
-    justify-content: center; /* Center song info */
+    justify-content: center;
     margin-bottom: 10px;
   }
 
-  /* Remove old #musicVisualizerCanvas styles for tablet view as it's now full screen */
-  /*
-  #musicVisualizerCanvas {
-    width: 90%;
-    max-width: 350px;
-    height: 50px;
-    margin-bottom: 5px;
-  }
-  */
-
   .controlSection {
     width: 100%;
-    gap: 8px; /* Reduce gap in control section */
+    gap: 8px;
   }
 
   .duration input[type="range"], #track {
@@ -241,6 +262,18 @@ input[type=range]::-moz-range-thumb {
 }
 
 @media (max-width: 480px) {
+  #mainHeader h1 {
+    font-size: 1.4rem;
+  }
+  #mainHeader {
+    height: 50px; /* Even smaller header on mobile */
+    padding: 0 10px;
+  }
+  #musicVisualizerCanvas {
+    top: 50px; /* Adjust canvas top for smaller header */
+    height: calc(100vh - 50px - 75px); /* Adjust canvas height, assuming player bar is ~75px on mobile */
+  }
+
   .musicPlayer {
     padding: 10px;
     gap: 8px;
@@ -259,14 +292,6 @@ input[type=range]::-moz-range-thumb {
     width: 50px;
     margin-bottom: 5px;
   }
-
-  /* Remove old #musicVisualizerCanvas styles for mobile view */
-  /*
-  #musicVisualizerCanvas {
-    height: 40px;
-    max-width: 90%;
-  }
-  */
 
   .controlSection .controls {
     gap: 15px;
