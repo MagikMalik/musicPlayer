@@ -3,14 +3,67 @@
   padding: 0;
   box-sizing: border-box;
 }
-body {
-  font-family: sans-serif;
-}
 
 :root {
-  --background_1: #000000;
-  --text_1: #626262;
-  --text_2: #ffffff;
+  --background_1: #1a1a1a; /* Darker grey */
+  --background_2: #0d0d0d; /* Even darker for accents or panel backgrounds */
+  --primary_accent: #00ff00; /* Neon Green */
+  --secondary_accent: #ff00ff; /* Neon Pink/Magenta for contrast */
+  --text_1: #cccccc; /* Light grey for primary text */
+  --text_2: #00ff00; /* Neon Green for important text/icons */
+  --border_color: #00ff00;
+  --slider_thumb_color: #00ff00;
+  --slider_track_color: #333333;
+}
+
+body {
+  font-family: 'Audiowide', sans-serif; /* Apply new font */
+  background-color: var(--background_2); /* Dark background for the whole page */
+  color: var(--text_1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.musicPlayer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background-color: var(--background_1);
+  border-top: 3px solid var(--border_color);
+  box-shadow: 0 -5px 15px rgba(0, 255, 0, 0.2);
+}
+
+.musicPlayer .infos {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.musicPlayer img#songPicture {
+  height: 60px;
+  width: 60px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 2px solid var(--primary_accent);
+  box-shadow: 0 0 10px var(--primary_accent);
+}
+
+.musicPlayer .songInfos #song_title {
+  color: var(--text_2);
+  font-size: 1rem;
+  font-weight: bold;
+  text-shadow: 0 0 5px var(--text_2);
+}
+.musicPlayer .songInfos #artist_name {
+  color: var(--text_1);
+  font-size: 0.8rem;
 }
 
 #pause-btn,
@@ -26,7 +79,8 @@ body {
 #volume_off {
   cursor: pointer;
   color: var(--text_1);
-  font-size: 40px;
+  font-size: 38px;
+  transition: color 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
 }
 #skipB-btn:hover,
 #play-btn:hover,
@@ -35,52 +89,69 @@ body {
 #volume_icon:hover,
 #volume_off:hover {
   color: var(--text_2);
-  transition: 0.2s ease-in-out;
+  text-shadow: 0 0 10px var(--text_2);
 }
-
-.musicPlayer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  border: solid 5px grey;
-  background-color: var(--background_1);
-}
-
-.musicPlayer .songInfos #song_title {
-  color: var(--text_2);
-  font-size: 0.9rem;
-}
-.musicPlayer .songInfos #artist_name {
-  color: var(--text_1);
-  font-size: 0.9rem;
-}
-.musicPlayer img {
-  height: 70px;
-  border-radius: 5px;
-}
-
-.infos {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.duration {
-  color: var(--text_1);
-  display: flex;
-  gap: 5px;
-}
-.duration input {
-  width: 450px;
+#play-btn, #pause-btn {
+    font-size: 48px;
 }
 
 .controlSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#musicVisualizerCanvas {
+  width: 300px;
+  height: 60px;
+  background-color: #000000;
+  border: 1px solid var(--primary_accent);
+  border-radius: 4px;
+}
+
+.duration {
+  color: var(--text_1);
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 8px;
+}
+
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--slider_track_color);
+  height: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  margin: 0 5px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--slider_thumb_color);
+  border-radius: 50%;
+  border: 2px solid var(--background_1);
+  box-shadow: 0 0 5px var(--slider_thumb_color);
+}
+input[type=range]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--slider_thumb_color);
+  border-radius: 50%;
+  border: 2px solid var(--background_1);
+  box-shadow: 0 0 5px var(--slider_thumb_color);
+  cursor: pointer;
+}
+
+#track {
+     width: 350px;
+}
+#volume {
+    width: 100px;
 }
 
 .volume_input {
@@ -88,11 +159,131 @@ body {
   align-items: center;
   color: var(--text_1);
 }
-#speaker {
-  font-size: 40px;
+
+/* Media Queries for Responsiveness */
+
+@media (max-width: 768px) {
+  .musicPlayer {
+    padding: 10px 15px; /* Reduce padding */
+    flex-direction: column; /* Stack sections vertically */
+    align-items: center; /* Center items in column layout */
+    gap: 10px; /* Add some gap between stacked items */
+  }
+
+  .infos {
+    width: 100%;
+    justify-content: center; /* Center song info */
+    margin-bottom: 10px;
+  }
+
+  #musicVisualizerCanvas {
+    width: 90%; /* Make visualizer take more width */
+    max-width: 350px; /* But not too wide */
+    height: 50px; /* Slightly reduce height */
+    margin-bottom: 5px;
+  }
+
+  .controlSection {
+    width: 100%;
+    gap: 8px; /* Reduce gap in control section */
+  }
+
+  /* Apply to the range input itself within .duration, and also #track if it's separate */
+  .duration input[type="range"], #track {
+    width: 100%; /* Make track slider full width of its container */
+    max-width: 400px; /* Cap its max width */
+  }
+
+  .duration {
+    width: 90%; /* Control the width of the duration container */
+    max-width: 400px; /* Ensure it doesn't get too wide with the slider */
+    justify-content: center;
+  }
+
+  .musicPlayer .songInfos #song_title {
+    font-size: 0.9rem;
+  }
+  .musicPlayer .songInfos #artist_name {
+    font-size: 0.7rem;
+  }
+
+  #play-btn, #pause-btn {
+    font-size: 42px; /* Slightly smaller play/pause */
+  }
+  #skipB-btn, #skipF-btn, #volume_icon, #volume_off {
+    font-size: 32px; /* Smaller other controls */
+  }
+
+  .volume {
+    margin-top: 10px; /* Add some space if player stacks and volume is last */
+    width: 100%; /* Take full width to allow centering of its content */
+    display: flex; /* Added to allow justify-content */
+    justify-content: center; /* Center volume controls if they become a block */
+  }
+  .volume_input {
+     justify-content: center; /* Ensure volume input content is centered */
+  }
+  #volume {
+    width: 120px; /* Slightly wider volume for easier touch */
+  }
 }
 
+@media (max-width: 480px) {
+  .musicPlayer {
+    padding: 10px; /* Further reduce padding */
+    gap: 8px;
+  }
 
-input[type=range] {
-  background: black;
+  .infos {
+    flex-direction: column; /* Stack image and text in song info */
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+    margin-bottom: 5px; /* Reduced margin */
+  }
+
+  .musicPlayer img#songPicture {
+    height: 50px; /* Smaller image */
+    width: 50px; /* Smaller image */
+    margin-bottom: 5px;
+  }
+
+  #musicVisualizerCanvas {
+    height: 40px; /* Smaller visualizer */
+    max-width: 90%; /* Allow it to be almost full width */
+  }
+
+  .controlSection .controls {
+    gap: 15px; /* Adjust gap between control buttons */
+  }
+
+  #play-btn, #pause-btn {
+    font-size: 40px;
+  }
+  #skipB-btn, #skipF-btn {
+    font-size: 30px;
+  }
+   #volume_icon, #volume_off {
+    font-size: 30px;
+  }
+
+  .duration {
+    font-size: 0.8rem; /* Smaller time text */
+    width: 100%; /* Ensure duration takes available width */
+    gap: 5px; /* Reduce gap in duration display */
+  }
+  /* Ensure #track also adheres to this */
+  .duration input[type="range"], #track {
+    width: 100%; /* Ensure slider uses available space */
+  }
+
+  .volume {
+    margin-top: 5px; /* Reduced margin */
+  }
+  #volume {
+    width: 100px;
+  }
+
+  /* Optional: Hide artist name if space is too tight, or make it smaller */
+  /* .musicPlayer .songInfos #artist_name { display: none; } */
 }
